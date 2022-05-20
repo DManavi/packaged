@@ -1,0 +1,45 @@
+{
+  "name": "packaged",
+  "version": "1.0.0",
+  "main": "./dist/require/index.js",
+  "module": "./dist/import/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/require/index.js",
+      "import": "./dist/import/index.js"
+    },
+    "./v1": {
+      "require": "./dist/require/v1/index.js",
+      "import": "./dist/import/v1/index.js"
+    }
+  },
+  "scripts": {
+    "clean": "rimraf dist",
+    "build:require": "tsc -b tsconfig.build.require.json",
+    "build:import": "tsc -b tsconfig.build.import.json",
+    "build": "run-p build:require build:import",
+    "rebuild": "run-s clean build",
+    "test:unit": "jest",
+    "test:unit:watch": "jest --watch",
+    "test:unit:cov": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DManavi/packaged.git"
+  },
+  "keywords": [],
+  "author": "Danial Manavi",
+  "license": "GPLV3",
+  "bugs": {
+    "url": "https://github.com/DManavi/packaged/issues"
+  },
+  "homepage": "https://github.com/DManavi/packaged#readme",
+  "devDependencies": {
+    "jest": "^28.1.0",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^28.0.2",
+    "typescript": "^4.6.4"
+  }
+}
