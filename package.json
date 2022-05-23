@@ -1,6 +1,6 @@
 {
   "name": "packaged",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "main": "",
   "types": "./types/index.d.ts",
   "repository": {
@@ -12,8 +12,7 @@
     "protocol",
     "faas",
     "function-as-a-service",
-    "rpc",
-    "dmanavi"
+    "rpc"
   ],
   "author": "Danial Manavi",
   "license": "GPLV3",
