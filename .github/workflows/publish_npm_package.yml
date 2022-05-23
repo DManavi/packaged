@@ -4,8 +4,8 @@
 name: Publish NPM package
 
 on:
-  push:
-    branches: [master]
+  release:
+    types: [created]
 
 jobs:
   build:
@@ -21,6 +21,6 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
       - run: npm run build
-      - run: echo ${{ secrets.NPM_TOKEN }} && npm publish
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
