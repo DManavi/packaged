@@ -1,4 +1,4 @@
-export type FunctionRequest<
+export type FunctionRequestV1<
   TArgs = Array<any>,
   TPayload = any,
   TRequestId = string,
@@ -19,7 +19,11 @@ export type FunctionRequest<
   payload?: TPayload;
 };
 
-export type FunctionResponse<TCode = number, TResult = any, TError = Error> = {
+export type FunctionResponseV1<
+  TCode = number,
+  TResult = any,
+  TError = Error,
+> = {
   /**
    * The function result status code
    */
@@ -44,4 +48,21 @@ export type FunctionResponse<TCode = number, TResult = any, TError = Error> = {
    * Error that occurred during the operation
    */
   error?: TError;
+};
+
+export type EventV1<TName = string, TPayload = any> = {
+  /**
+   * Event name
+   */
+  name: TName;
+
+  /**
+   * Event payload
+   */
+  payload?: TPayload;
+
+  /**
+   * Event timestamp
+   */
+  timestamp?: Date;
 };
