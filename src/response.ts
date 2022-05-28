@@ -30,6 +30,11 @@ export type ResponseError<TData = Error> = {
 
 export type ResponseBase = JsonRpcBase & {
   /**
+   * Request identifier
+   */
+  id: string | number;
+
+  /**
    * Called method
    */
   method: string;
