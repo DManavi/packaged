@@ -14,11 +14,9 @@ This project only contains the abstraction and there's no implementation involve
 
 To install this package, run the command below.
 
-> Since there's no implementation involved, it's recommended to install this package as a development-time package.
-
 ```sh
-npm install --save-dev packaged
-yarn add packaged --dev
+npm install --save packaged
+yarn add packaged
 ```
 
 ## Usage
@@ -26,13 +24,13 @@ yarn add packaged --dev
 ### CommonJS
 
 ```js
-const { FunctionRequestV1, FunctionResponseV1, EventV1 } = require('packaged');
+const {} = require('packaged');
 ```
 
 ### ES6/TypeScript
 
 ```js
-import { FunctionRequestV1, FunctionResponseV1, EventV1 } from 'packaged';
+import {} from 'packaged';
 ```
 
 And you're good to go!

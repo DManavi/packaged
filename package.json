@@ -1,6 +1,6 @@
 {
   "name": "packaged",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "main": "./dist/require/index.js",
   "module": "./dist/import/index.js",
   "types": "./dist/types/index.d.ts",
