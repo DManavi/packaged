@@ -1,11 +1,14 @@
 {
   "name": "packaged",
-  "version": "1.0.11",
-  "main": "",
-  "types": "./types/index.d.ts",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DManavi/packaged.git"
+  "version": "2.0.0",
+  "main": "./dist/require/index.js",
+  "module": "./dist/import/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/require/index.js",
+      "import": "./dist/import/index.js"
+    }
   },
   "keywords": [
     "contract",
@@ -26,8 +29,9 @@
     "typescript": "4.6.4"
   },
   "scripts": {
-    "clean": "rimraf ./types",
-    "build": "tsc -b ./tsconfig.build.json",
-    "rebuild": "run-s clean build"
+    "clean": "rimraf dist",
+    "compile:require": "tsc -b tsconfig.build.require.json",
+    "compile:import": "tsc -b tsconfig.build.import.json",
+    "build": "run-p compile:require compile:import"
   }
 }
