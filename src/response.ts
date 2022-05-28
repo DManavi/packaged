@@ -56,4 +56,4 @@ export type SuccessResponse<TResult = any> = ResponseBase & {
 
 export type Response = ErrorResponse | SuccessResponse;
 
-export type BatchResponse = Array<ErrorResponse | SuccessResponse>;
+export type BatchResponse = Array<Response>;
