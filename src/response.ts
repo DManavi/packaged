@@ -1,4 +1,4 @@
-import { JsonRpcBase } from 'json_rpc_base';
+import { JsonRpcBase } from './json_rpc_base';
 
 export const JsonRpcErrors: Record<number, string> = {
   /* https://www.jsonrpc.org/specification */

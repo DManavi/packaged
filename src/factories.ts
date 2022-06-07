@@ -1,5 +1,5 @@
-import { JSON_RPC_VERSION_20 } from 'json_rpc_base';
-import { InvokeRequest, NotificationRequest } from 'request';
+import { JSON_RPC_VERSION_20 } from './json_rpc_base';
+import { InvokeRequest, NotificationRequest } from './request';
 
 export const createNotificationRequest = <TParams = Array<any>>(
   method: string,
