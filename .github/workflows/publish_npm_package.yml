@@ -21,7 +21,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
       - run: npx nx test
-      - run: ./node_modules/.bin/remove_dev_deps.js > package.json
+      - run: node ./bin/remove_dev_deps.js > package.json
       - run: npx nx publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
