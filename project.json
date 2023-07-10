@@ -1,0 +1,48 @@
+{
+  "name": "packaged",
+  "$schema": "node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "src",
+  "projectType": "library",
+  "targets": {
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./node_modules/.bin/rimraf dist"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "./node_modules/.bin/tsc --project tsconfig.lib.cjs.json",
+          "./node_modules/.bin/tsc --project tsconfig.lib.esm.json"
+        ],
+        "parallel": false
+      },
+      "dependsOn": ["clean"]
+    },
+    "publish": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm publish --access=public"
+      },
+      "dependsOn": ["build", "test"]
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["./**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["coverage/packaged"],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "coverage/packaged"
+      }
+    }
+  },
+  "tags": []
+}

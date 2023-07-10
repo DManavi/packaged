@@ -16,11 +16,12 @@ jobs:
       - name: 'Use Node.js 16.x'
         uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: 18
           cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
-      - run: npm run build
-      - run: npm publish
+      - run: npx nx test
+      - run: ./node_modules/.bin/remove_dev_deps.js > package.json
+      - run: npx nx publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

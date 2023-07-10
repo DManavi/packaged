@@ -15,7 +15,10 @@ This project only contains the abstraction and there's no implementation involve
 To install this package, run the command below.
 
 ```sh
+# npm
 npm install --save packaged
+
+# yarn
 yarn add packaged
 ```
 
@@ -37,7 +40,7 @@ And you're good to go!
 
 ## License
 
-GPL v3
+MIT
 
 [npm-image]: https://img.shields.io/npm/v/packaged
 [npm-url]: https://npmjs.org/package/packaged
