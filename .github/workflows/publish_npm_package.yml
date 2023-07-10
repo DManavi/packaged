@@ -22,6 +22,7 @@ jobs:
       - run: npm ci
       - run: npx nx test
       - run: ls -la
+      - run: cat package.json
       - run: ./bin/remove_dev_deps.js > package.json
       - run: npx nx publish
         env:

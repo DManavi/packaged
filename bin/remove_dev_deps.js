@@ -4,7 +4,12 @@ const { resolve } = require('node:path');
 const { readFileSync } = require('node:fs');
 
 // load package.json
-const pkgStr = readFileSync(resolve(__dirname, '..', 'package.json'), 'utf-8');
+
+const pkgFilePath = resolve(__dirname, '..', 'package.json');
+
+const pkgStr = readFileSync(pkgFilePath, {
+  encoding: 'utf-8',
+});
 // parse JSON content
 const pkg = JSON.parse(pkgStr);
 
