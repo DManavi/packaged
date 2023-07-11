@@ -10,6 +10,7 @@ const pkgFilePath = resolve(__dirname, '..', 'package.json');
 const pkgStr = readFileSync(pkgFilePath, {
   encoding: 'utf-8',
 });
+
 // parse JSON content
 const pkg = JSON.parse(pkgStr);
 
