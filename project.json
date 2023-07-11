@@ -25,10 +25,13 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "./bin/remove_dev_deps.js > package.json",
+          "./bin/remove_dev_deps.js < package.json > package-updated.json",
+          "./node_modules/.bin/rimraf package.json",
+          "./node_modules/.bin/shx mv package-updated.json package.json",
           "npm publish --access=public",
           "git checkout package.json"
-        ]
+        ],
+        "parallel": false
       },
       "dependsOn": ["build", "test"]
     },
