@@ -1,6 +1,6 @@
 {
   "name": "packaged",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "license": "MIT",
   "main": "./dist/require/index.js",
   "module": "./dist/import/index.js",
@@ -12,6 +12,10 @@
     "./api": {
       "require": "./dist/require/api/index.js",
       "import": "./dist/import/api/index.js"
+    },
+    "./contracts": {
+      "require": "./dist/require/contracts/index.js",
+      "import": "./dist/import/contracts/index.js"
     },
     "./events": {
       "require": "./dist/require/events/index.js",
