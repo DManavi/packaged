@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.lib.json",
   "compilerOptions": {
-    "outDir": "./dist/cjs"
+    "outDir": "./dist/require"
   }
 }
