@@ -20,6 +20,6 @@ jobs:
           cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
-      - run: npx publish
+      - run: npx nx publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
