@@ -1,6 +1,6 @@
 {
   "name": "packaged",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "license": "MIT",
   "main": "./dist/require/index.js",
   "module": "./dist/import/index.js",
