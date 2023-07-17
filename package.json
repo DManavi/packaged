@@ -25,6 +25,10 @@
       "require": "./dist/require/helpers/index.js",
       "import": "./dist/import/helpers/index.js"
     },
+    "./operations": {
+      "require": "./dist/require/operations/index.js",
+      "import": "./dist/import/operations/index.js"
+    },
     "./package.json": "./package.json"
   },
   "typesVersions": {
