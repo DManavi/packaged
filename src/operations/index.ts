@@ -1,4 +1,3 @@
-export { OperationResultBase } from './common';
 export {
   SuccessfulOperationResult,
   FailedOperationResult,
