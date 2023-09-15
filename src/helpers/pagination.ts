@@ -1,7 +1,39 @@
 // public-level
 import * as z from 'zod';
-// package-level
-import { PaginationRequest, PaginationResponse } from '../api';
+
+export type PaginationRequest = {
+  /**
+   * Page number (starts from 1)
+   */
+  page: number;
+
+  /**
+   * Items per page
+   */
+  size: number;
+};
+
+export type PaginationResponse = {
+  /**
+   * Page number (starts from 1)
+   */
+  page: number;
+
+  /**
+   * Items per page
+   */
+  size: number;
+
+  /**
+   * Total items in the database
+   */
+  totalItems: number;
+
+  /**
+   * Total pages
+   */
+  totalPages: number;
+};
 
 /**
  * Page number schema
