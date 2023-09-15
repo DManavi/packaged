@@ -1,4 +1,4 @@
-import { PaginationRequest } from './pagination';
+import { PaginationRequest } from '../helpers';
 
 type ApiRequestBase = {};
 type ApiRequestWithPayload<TPayload = any> = ApiRequestBase & {
