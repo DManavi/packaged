@@ -1,6 +1,6 @@
 {
   "name": "packaged",
-  "version": "3.0.5",
+  "version": "4.0.0",
   "license": "MIT",
   "main": "./dist/require/index.js",
   "module": "./dist/import/index.js",
@@ -13,10 +13,6 @@
       "require": "./dist/require/api/index.js",
       "import": "./dist/import/api/index.js"
     },
-    "./contracts": {
-      "require": "./dist/require/contracts/index.js",
-      "import": "./dist/import/contracts/index.js"
-    },
     "./events": {
       "require": "./dist/require/events/index.js",
       "import": "./dist/import/events/index.js"
@@ -25,9 +21,9 @@
       "require": "./dist/require/helpers/index.js",
       "import": "./dist/import/helpers/index.js"
     },
-    "./operations": {
-      "require": "./dist/require/operations/index.js",
-      "import": "./dist/import/operations/index.js"
+    "./rpc": {
+      "require": "./dist/require/rpc/index.js",
+      "import": "./dist/import/rpc/index.js"
     },
     "./package.json": "./package.json"
   },
