@@ -1,21 +1,3 @@
-/* API response base */
-export type ApiResponseBase<TRequestId = string> = {
-  /**
-   * Request identifier
-   */
-  requestId: TRequestId;
-
-  /**
-   * determines if the operation was successful or not
-   */
-  success: boolean;
-
-  /**
-   * Response metadata
-   */
-  metadata?: Record<string, any>;
-};
-
 /**
  * API response error object
  */
