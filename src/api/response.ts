@@ -1,35 +1,44 @@
 import { PaginationResponse } from '../helpers/pagination';
 
-type ApiResponseBase<TResult = string> = {
+type ApiResponseBase = {
   /**
-   * API operation result
+   * Computer-friendly code (e.g. OK or E_ACCESS_DENIED)
    */
-  result: TResult;
+  code: string;
+
+  /**
+   * Human-friendly message (e.g. You're request has been processed)
+   */
+  message?: string;
 };
 
-type ApiResponseWithData<
-  TPayload = void,
-  TResult = string,
-> = ApiResponseBase<TResult> & {
+type ApiResponseWithData<TPayload = void> = ApiResponseBase & {
   /**
    * API response payload
    */
   payload: TPayload;
 };
 
-export type PaginatedApiResponse<
-  TPayload = any,
-  TResult = string,
-> = ApiResponseWithData<TPayload, TResult> & {
+export type PaginatedApiResponse<TPayload = any> =
+  ApiResponseWithData<TPayload> & {
+    /**
+     * Pagination response
+     */
+    pagination: PaginationResponse;
+  };
+
+export type ApiResponse<TPayload = void> = TPayload extends void
+  ? ApiResponseBase
+  : ApiResponseWithData<TPayload>;
+
+type FailedApiResponseBase = ApiResponseBase;
+type FailedApiResponseWithDetails<TError = any> = FailedApiResponseBase & {
   /**
-   * Pagination response
+   * Error details
    */
-  pagination: PaginationResponse;
+  error: TError;
 };
 
-export type ApiResponse<
-  TPayload = void,
-  TResult = string,
-> = TPayload extends void
-  ? ApiResponseBase<TResult>
-  : ApiResponseWithData<TPayload, TResult>;
+export type FailedApiResponse<TError = void> = TError extends void
+  ? FailedApiResponseBase
+  : FailedApiResponseWithDetails<TError>;

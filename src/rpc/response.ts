@@ -1,13 +1,15 @@
 import { RpcBase } from './common';
 
-type RpcResponseBase<
-  TRequestId = string,
-  TResult = string,
-> = RpcBase<TRequestId> & {
+type RpcResponseBase<TRequestId = string> = RpcBase<TRequestId> & {
   /**
-   * Operation result
+   * Computer-friendly code (e.g. OK or E_ACCESS_DENIED)
    */
-  result: TResult;
+  code: string;
+
+  /**
+   * Human-friendly message (e.g. You're request has been processed)
+   */
+  message?: string;
 };
 type RpcResponseWithPayload<
   TRequestId = string,
