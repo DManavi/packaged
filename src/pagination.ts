@@ -14,7 +14,7 @@ type PaginationRequestBase = {
   limit?: number;
 };
 
-type CursorBasedPaginationRequest = PaginationRequestBase & {
+export type CursorBasedPaginationRequest = PaginationRequestBase & {
   type: 'cursor';
 
   /**
@@ -25,7 +25,7 @@ type CursorBasedPaginationRequest = PaginationRequestBase & {
   cursor?: string;
 };
 
-type OffsetBasedPaginationRequest = {
+export type OffsetBasedPaginationRequest = {
   type: 'offset';
 
   /**
@@ -58,7 +58,7 @@ type PaginationResponseBase = {
   totalPages: number;
 };
 
-type CursorBasedPaginationResponse = PaginationResponseBase & {
+export type CursorBasedPaginationResponse = PaginationResponseBase & {
   type: 'cursor';
 
   /**
@@ -68,7 +68,7 @@ type CursorBasedPaginationResponse = PaginationResponseBase & {
   cursor?: string;
 };
 
-type OffsetBasedPaginationResponse = PaginationResponseBase & {
+export type OffsetBasedPaginationResponse = PaginationResponseBase & {
   type: 'offset';
 };
 
