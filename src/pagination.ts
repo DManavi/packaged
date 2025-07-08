@@ -25,7 +25,7 @@ export type CursorBasedPaginationRequest = PaginationRequestBase & {
   cursor?: string;
 };
 
-export type OffsetBasedPaginationRequest = {
+export type OffsetBasedPaginationRequest = PaginationRequestBase & {
   type: 'offset';
 
   /**
