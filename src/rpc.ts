@@ -55,13 +55,13 @@ export type ErrorResponse<TError = void> = TError extends void
 
 export type Response = SuccessResponse | ErrorResponse;
 
-export type PaginatedResponse<TDataItem = any> = SuccessResponseWithPayload<
+export type PaginatedResponse<TDataItem = any, TPagination = PaginationResponse> = SuccessResponseWithPayload<
   Array<TDataItem>
 > & {
   /**
    * Pagination response
    */
-  pagination: PaginationResponse;
+  pagination: TPagination;
 };
 
 export type PaginatedRequest = {
