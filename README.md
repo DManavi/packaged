@@ -6,7 +6,6 @@
 
 [![npm version][npm-version-image]][npm-url]
 [![npm downloads][npm-downloads-image]][npm-url]
-[![publish workflow][publish-image]][publish-url]
 [![license][license-image]][license-url]
 
 </div>
@@ -341,7 +340,5 @@ Distributed under the [MIT License](./LICENSE).
 [npm-version-image]: https://img.shields.io/npm/v/packaged?logo=npm
 [npm-downloads-image]: https://img.shields.io/npm/dw/packaged?logo=npm
 [npm-url]: https://www.npmjs.com/package/packaged
-[publish-image]: https://github.com/DManavi/packaged/actions/workflows/publish_npm_package.yml/badge.svg
-[publish-url]: https://github.com/DManavi/packaged/actions/workflows/publish_npm_package.yml
 [license-image]: https://img.shields.io/npm/l/packaged
 [license-url]: ./LICENSE
