@@ -1,130 +1,347 @@
+<div align="center">
+
 # Packaged
 
-[![NPM version][npm-image]](https://npmjs.org/package/packaged)
-[![NPM downloads][downloads-image]](https://npmjs.org/package/packaged)
-[![Build Status][github-actions-publish-npm-package]](https://github.com/DManavi/packaged/actions/workflows/publish_npm_package.yml)
+**Portable TypeScript contracts for events, RPC responses, and pagination.**
 
-## About
+[![npm version][npm-version-image]][npm-url]
+[![npm downloads][npm-downloads-image]][npm-url]
+[![publish workflow][publish-image]][publish-url]
+[![license][license-image]][license-url]
 
-Packaged is a repository that contains interfaces/types/contracts that helps developers to create their own strongly-typed environment-agnostic (AWS, Azure, Google Cloud, IBM Cloud, Apache OpenWhisk, etc.) Function-as-a-Service apps.
+</div>
 
-This project only contains the abstraction and there's no implementation involved. Given that, developers can implement application-specific business logic without having a unified API interface.
+Packaged is a small, implementation-free collection of TypeScript types for
+building consistent APIs and event-driven applications. Use the same contracts
+in serverless functions, services, workers, and clients without coupling your
+business logic to AWS, Azure, Google Cloud, IBM Cloud, OpenWhisk, or a specific
+web framework.
+
+## Why Packaged?
+
+- **Environment agnostic** - describe application boundaries without importing
+  a cloud provider or framework SDK.
+- **Strongly typed** - model payloads, filters, success responses, errors, and
+  pagination with TypeScript generics.
+- **Composable** - combine small request contracts to match each endpoint.
+- **Type-only** - the package adds contracts, not runtime behavior or
+  dependencies.
 
 ## Installation
 
-To install this package, run the command below.
+```sh
+npm install packaged
+```
 
 ```sh
-# npm
-npm install --save packaged
-
-# yarn
 yarn add packaged
 ```
 
-## Usage
+```sh
+pnpm add packaged
+```
 
-### Event
+## Quick start
 
-[This file](./src/event.ts) contains a general event structure. The event is a generic type, means that not providing the payload type (TPayload) results in an event w/o payload.
+Define an event once and share its contract between the code that publishes it
+and every consumer:
 
 ```typescript
-import { Event } from 'packaged';
+import type { Event } from 'packaged';
 
-const dailyCronEvent: Event = {
-  // check the properties of the Event object
+type UserRegistered = {
+  userId: string;
+  email: string;
 };
 
-const userRegisteredEvent: Event<User> = {
-  // check the properties of the Event object
-
+const event: Event<UserRegistered> = {
+  id: crypto.randomUUID(),
+  version: '1',
+  time: new Date().toISOString(),
+  type: 'user.registered',
+  source: 'accounts-service',
+  userId: 'usr_123',
+  metadata: {
+    correlationId: 'req_456',
+  },
   payload: {
-    // User object (based on the input type)
+    userId: 'usr_123',
+    email: 'ada@example.com',
   },
 };
 ```
 
-### RPC
+Because Packaged exports types only, prefer `import type` when your TypeScript
+configuration supports it.
 
-[This file](./src/rpc.ts) contains a request/response structure for an RPC system (e.g. HTTP API or internal lambda functions).
+## Events
 
-#### Request
-
-The request object is not unified (due to the complexity and coupling to the implementation). But there are several types you can use to unify your request objects.
-
-- PaginatedRequest
-- FilteredRequest<TFilter>
-- RequestWithPayload<TPayload>
-
-You can define your request object by combining these types.
+`Event<TPayload>` provides a consistent envelope for messages exchanged through
+queues, topics, event buses, or direct function invocations.
 
 ```typescript
-import { PaginatedRequest, FilteredRequest } from 'packaged';
+import type { Event } from 'packaged';
 
-type UserFilters = {
-  group: Array<string>;
+// Events can omit a payload when the envelope contains all required context.
+const nightlyCleanup: Event = {
+  id: 'evt_01',
+  version: '1',
+  time: '2026-09-05T02:00:00.000Z',
+  type: 'maintenance.cleanup.started',
+  source: 'scheduler',
 };
 
-type ListUsersRequest = PaginatedRequest & FilteredRequest<UserFilters>;
-
-const listUsers = (req: ListUserRequest) => {
-  const { filters, pagination } = req;
-
-  // apply filters (e.g. filters.group...)
-
-  // apply pagination (e.g. skip/take or cursor based)
+type OrderPaid = {
+  orderId: string;
+  amountInCents: number;
+  currency: 'USD' | 'EUR';
 };
+
+function handleOrderPaid(event: Event<OrderPaid>): void {
+  console.log(`Paid order ${event.payload.orderId}`);
+}
 ```
 
-#### Response
+See the complete [`Event` contract](./src/event.ts).
 
-There are two main response types:
+## RPC requests
 
-- SuccessResponse
-- ErrorResponse
+Build request contracts by combining only the capabilities an operation needs:
 
-There is one child response from SuccessResponse
+- `RequestWithPayload<TPayload>` for commands with an input body.
+- `FilteredRequest<TFilters>` for query filters.
+- `PaginatedRequest` for cursor- or offset-based pagination.
 
-- PaginatedResponse
+### Command request
 
 ```typescript
-import { Response, PaginatedResponse } from 'packaged';
+import type { RequestWithPayload } from 'packaged';
 
-const requestReceived: Response = {
-  // check the properties of the Event object
+type CreateUserRequest = RequestWithPayload<{
+  email: string;
+  displayName: string;
+}>;
+
+async function createUser(request: CreateUserRequest) {
+  const { email, displayName } = request.payload;
+  // Persist the user using your database or service of choice.
+  return { email, displayName };
+}
+```
+
+### Filtered, paginated query
+
+```typescript
+import type { FilteredRequest, PaginatedRequest } from 'packaged';
+
+type ListUsersRequest = FilteredRequest<{
+  status?: 'active' | 'disabled';
+  teamId?: string;
+}> &
+  PaginatedRequest;
+
+const request: ListUsersRequest = {
+  filters: {
+    status: 'active',
+    teamId: 'team_42',
+  },
+  pagination: {
+    type: 'offset',
+    offset: 40,
+    limit: 20,
+  },
 };
 
-const userCreatedResponse: Response<User> = {
-  // check the properties of the Event object
+async function listUsers(input: ListUsersRequest) {
+  if (input.pagination.type === 'offset') {
+    const { offset = 0, limit = 20 } = input.pagination;
+    // Apply filters and query with offset/limit.
+    return { offset, limit, filters: input.filters };
+  }
 
+  const { cursor, limit = 20 } = input.pagination;
+  // Decode the cursor and fetch the next page.
+  return { cursor, limit, filters: input.filters };
+}
+```
+
+## RPC responses
+
+Success and error responses form a discriminated union through the `status`
+field, so TypeScript narrows the available properties after a status check.
+
+```typescript
+import type { ErrorResponse, SuccessResponse } from 'packaged';
+
+type User = {
+  id: string;
+  email: string;
+};
+
+type ValidationError = {
+  field: keyof User;
+  reason: string;
+};
+
+type CreateUserResponse =
+  | SuccessResponse<User>
+  | ErrorResponse<ValidationError>;
+
+function describe(result: CreateUserResponse): string {
+  if (result.status === 'success') {
+    return `Created ${result.payload.email}`;
+  }
+
+  return `${result.message}: ${result.payload.field}`;
+}
+
+const result: CreateUserResponse = {
+  status: 'success',
+  code: 'USER_CREATED',
   payload: {
-    // User object (based on the input type)
+    id: 'usr_123',
+    email: 'ada@example.com',
   },
 };
 ```
 
-### Pagination
+For operations without a payload, omit the generic argument and `payload`
+property:
 
-#### Offset-based
+```typescript
+import type { ErrorResponse, SuccessResponse } from 'packaged';
 
-TBD
+const accepted: SuccessResponse = {
+  status: 'success',
+  code: 'ACCEPTED',
+};
 
-#### Cursor-based
+const unavailable: ErrorResponse = {
+  status: 'error',
+  code: 'SERVICE_UNAVAILABLE',
+  message: 'Please try again later',
+};
+```
 
-TBD
+See all [RPC request and response contracts](./src/rpc.ts).
 
-And you're good to go!
+## Pagination
+
+Packaged supports offset-based and cursor-based pagination. The `type` field
+discriminates both request and response shapes.
+
+### Offset-based pagination
+
+Offset pagination works well for stable datasets and interfaces that need page
+numbers or direct page navigation.
+
+```typescript
+import type {
+  OffsetBasedPaginationRequest,
+  PaginatedResponse,
+} from 'packaged';
+
+const pagination: OffsetBasedPaginationRequest = {
+  type: 'offset',
+  offset: 20,
+  limit: 10,
+};
+
+type Product = {
+  id: string;
+  name: string;
+};
+
+const response: PaginatedResponse<Product> = {
+  status: 'success',
+  code: 'PRODUCTS_LISTED',
+  payload: [
+    { id: 'prod_21', name: 'Mechanical keyboard' },
+    { id: 'prod_22', name: 'USB-C dock' },
+  ],
+  pagination: {
+    type: 'offset',
+    totalItems: 42,
+    totalPages: 5,
+  },
+};
+```
+
+### Cursor-based pagination
+
+Cursor pagination is useful for frequently changing datasets, feeds, and large
+tables where an offset can become slow or inconsistent.
+
+```typescript
+import type {
+  CursorBasedPaginationRequest,
+  CursorBasedPaginationResponse,
+  PaginatedResponse,
+} from 'packaged';
+
+const pagination: CursorBasedPaginationRequest = {
+  type: 'cursor',
+  cursor: 'eyJpZCI6ImV2dF8xMDAifQ==',
+  limit: 25,
+};
+
+type AuditEntry = {
+  id: string;
+  action: string;
+};
+
+const response: PaginatedResponse<
+  AuditEntry,
+  CursorBasedPaginationResponse
+> = {
+  status: 'success',
+  code: 'AUDIT_ENTRIES_LISTED',
+  payload: [{ id: 'evt_101', action: 'user.updated' }],
+  pagination: {
+    type: 'cursor',
+    cursor: 'eyJpZCI6ImV2dF8xMDEifQ==',
+    totalItems: 101,
+    totalPages: 5,
+  },
+};
+```
+
+See all [pagination contracts](./src/pagination.ts).
+
+## Available exports
+
+All contracts are available from the package root:
+
+```typescript
+import type {
+  Event,
+  ErrorResponse,
+  FilteredRequest,
+  PaginatedRequest,
+  PaginatedResponse,
+  PaginationRequest,
+  PaginationResponse,
+  RequestWithPayload,
+  SuccessResponse,
+} from 'packaged';
+```
+
+Type declarations are also organized by module:
+
+```typescript
+import type { Event } from 'packaged/event';
+import type { PaginationRequest } from 'packaged/pagination';
+import type { SuccessResponse } from 'packaged/rpc';
+```
 
 ## License
 
-MIT
+Distributed under the [MIT License](./LICENSE).
 
-[npm-image]: https://img.shields.io/npm/v/packaged
-[npm-url]: https://npmjs.org/package/packaged
-[github-actions-publish-npm-package]: https://github.com/DManavi/packaged/actions/workflows/publish_npm_package.yml/badge.svg
-[downloads-image]: https://img.shields.io/npm/dw/packaged
-[downloads-url]: https://npmjs.org/package/packaged
-
-```
-
-```
+[npm-version-image]: https://img.shields.io/npm/v/packaged?logo=npm
+[npm-downloads-image]: https://img.shields.io/npm/dw/packaged?logo=npm
+[npm-url]: https://www.npmjs.com/package/packaged
+[publish-image]: https://github.com/DManavi/packaged/actions/workflows/publish_npm_package.yml/badge.svg
+[publish-url]: https://github.com/DManavi/packaged/actions/workflows/publish_npm_package.yml
+[license-image]: https://img.shields.io/npm/l/packaged
+[license-url]: ./LICENSE
